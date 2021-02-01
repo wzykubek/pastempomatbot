@@ -33,7 +33,12 @@ def paste_add(update, context):
         with open("./data/copypastes.json", "r") as f:
             pastes = json.loads(f.read())
         name = " ".join(context.args)
-        content = update.message["reply_to_message"]["text"].replace("_", "\\_")
+        content = (
+            update.message["reply_to_message"]["text"]
+            .replace("_", "\\_")
+            .replace("[", "\\[")
+            .replace("]", "\\]")
+        )
 
         try:
             list(pastes).index(name)
