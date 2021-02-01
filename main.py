@@ -85,7 +85,7 @@ def inline(update, context):
         answers = []
         for i in query:
             for paste in list(pastes):
-                if i in paste:
+                if i.lower() in paste.lower():
                     content = pastes.get(paste)
                     try:
                         answers.append(
