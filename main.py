@@ -69,17 +69,18 @@ def inline(update, context):
         for paste in list(pastes):
             content = pastes.get(paste)
 
-            answers.append(
-                InlineQueryResultArticle(
-                    id=list(pastes).index(paste),
-                    title=paste,
-                    description=content[:32] + (content[29:] and "..."),
-                    input_message_content=InputTextMessageContent(
-                        content,
-                        parse_mode=ParseMode.MARKDOWN,
-                    ),
+            if len(answers) < 50:
+                answers.append(
+                    InlineQueryResultArticle(
+                        id=list(pastes).index(paste),
+                        title=paste,
+                        description=content[:32] + (content[29:] and "..."),
+                        input_message_content=InputTextMessageContent(
+                            content,
+                            parse_mode=ParseMode.MARKDOWN,
+                        ),
+                    )
                 )
-            )
         context.bot.answer_inline_query(update.inline_query.id, answers, cache_time=0)
     else:
         answers = []
