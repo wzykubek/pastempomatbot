@@ -1,15 +1,22 @@
-FROM python:3.8-alpine
+FROM python:3.9.5-slim
 
 LABEL maintainer="samedamci@disroot.org"
+LABEL org.opencontainers.image.source https://github.com/samedamci/pastempomatbot
 
-RUN apk add --no-cache gcc musl-dev linux-headers libc-dev libffi-dev libressl-dev && \
-	pip3 install python-telegram-bot python-dotenv && \
-	mkdir /opt/bot && \
-	apk del gcc musl-dev linux-headers libc-dev libressl-dev
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-COPY . /opt/bot/
-RUN rm -r /opt/bot/data
+ENV TOKEN TOKEN
 
-VOLUME /opt/bot/data
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
 
-CMD cd /opt/bot/ && python3 main.py
+WORKDIR /bot
+COPY . /bot
+
+VOLUME ["/bot/data"]
+
+RUN adduser -u 5678 --disabled-password --gecos "" botuser && chown -R botuser /bot
+USER botuser
+
+CMD ["python3", "run.py"]
