@@ -1,2 +1,2 @@
-Telegrask
+Telegrask>=0.1.2
 tinydb
